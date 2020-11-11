@@ -40,12 +40,12 @@ class TriviaTestCase(unittest.TestCase):
         pass
 
     """
-    @TODO:
+    @DONE:
     Write at least one test for each test for successful operation and for
     expected errors.
     """
     def test_retrive_categories(self):
-        res = self.client().get('/questions')
+        res = self.client().get('/categories')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -63,6 +63,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(len(data['categories']))
         self.assertEqual(data['current_category'], None)
+
+    def test_404_retrieve_paginated_questions(self):
+        res = self.client().get('/questions?page=1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'resource not found')
 
     def test_delete_question(self):
         res = self.client().delete('/questions/2')
