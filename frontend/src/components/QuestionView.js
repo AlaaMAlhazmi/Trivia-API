@@ -41,7 +41,10 @@ class QuestionView extends Component {
   }
 
   selectPage(num) {
-    this.setState({page: num}, () => this.getQuestions());
+    if (this.state.currentCategory)
+      this.setState({page: num}, () => this.getByCategory(this.state.currentCategory.id));
+    else
+      this.setState({page: num}, () => this.getQuestions());
   }
 
   createPagination(){
@@ -60,7 +63,7 @@ class QuestionView extends Component {
 
   getByCategory= (id) => {
     $.ajax({
-      url: `/categories/${id}/questions`, //TODO: update request URL
+      url: `/categories/${id}/questions?page=${this.state.page}`, //TODO: update request URL
       type: "GET",
       success: (result) => {
         this.setState({
